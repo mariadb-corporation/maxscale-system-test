@@ -235,6 +235,11 @@ void TestConnections::add_result(int result, const char *format, ...)
         va_start(argp, format);
         vprintf(format, argp);
         va_end(argp);
+
+        if (format[strlen(format) - 1] != '\n')
+        {
+            printf("\n");
+        }
     }
 }
 
@@ -1122,6 +1127,12 @@ int TestConnections::tprintf(const char *format, ...)
     va_start(argp, format);
     vprintf(format, argp);
     va_end(argp);
+
+    /** Add a newline if the message doesn't have one */
+    if (format[strlen(format) - 1] != '\n')
+    {
+        printf("\n");
+    }
 }
 
 void *timeout_thread( void *ptr )

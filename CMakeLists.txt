@@ -359,6 +359,7 @@ add_test_script(mxs791_galera.sh galera)
 add_test_executable(mxs799_crash_bad_socket.cpp mxs799_crash_bad_socket mxs799)
 add_test_executable(user_cache.cpp user_cache user_cache)
 add_test_executable(mxs813_long_hostname.cpp mxs813_long_hostname setup_binlog)
+add_test_executable(mxs716.cpp mxs716 replication)
 
 # Python based tests
 add_test_script(mxs585.py replication)
@@ -433,6 +434,7 @@ light_weight_tests(
   server_weight
   setup_binlog_crc_none
   test_hints
+  mxs716
   )
 
 # See if we are on a RPM-capable or DEB-capable system

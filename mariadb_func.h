@@ -26,11 +26,11 @@
 #include <math.h>
 #include <time.h>
 
-MYSQL * open_conn_db_flags(int port, char * ip, char * db, char * User, char * Password, unsigned long flag, bool ssl);
-MYSQL * open_conn_db_timeout(int port, char * ip, char * db, char * User, char * Password, unsigned long timeout, bool ssl);
-MYSQL * open_conn_db(int port, char * ip, char * db, char * User, char * Password, bool ssl);
-MYSQL * open_conn(int port, char * ip, char *User, char *Password, bool ssl);
-MYSQL * open_conn_no_db(int port, char * ip, char *User, char *Password, bool ssl);
+MYSQL * open_conn_db_flags(int port, const char* ip, const char* db, const char* User, const char* Password, unsigned long flag, bool ssl);
+MYSQL * open_conn_db_timeout(int port, const char* ip, const char* db, const char* User, const char* Password, unsigned long timeout, bool ssl);
+MYSQL * open_conn_db(int port, const char* ip, const char* db, const char* User, const char* Password, bool ssl);
+MYSQL * open_conn(int port, const char* ip, const char* User, const char* Password, bool ssl);
+MYSQL * open_conn_no_db(int port, const char* ip, const char* User, const char* Password, bool ssl);
 int set_ssl(MYSQL * conn);
 int execute_query(MYSQL *conn, const char *sql);
 int execute_query_silent(MYSQL *conn, const char *sql);

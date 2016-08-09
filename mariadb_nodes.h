@@ -409,6 +409,14 @@ public:
      * @return exit code of the system command or 1 in case of i > N
      */
     int copy_to_node(char* src, char* dest, int i);
+
+    /**
+     * @brief Synchronize slaves with the master
+     *
+     * Only works with master-slave replication and should not be used with Galera clusters.
+     * The function expects that the first node, @c nodes[0], is the master.
+     */
+    void sync_slaves();
 };
 
 #endif // MARIADB_NODES_H

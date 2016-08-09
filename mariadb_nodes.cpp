@@ -17,6 +17,7 @@
 Mariadb_nodes::Mariadb_nodes(char * pref)
 {
     strcpy(prefix, pref);
+    memset(this->nodes, 0, sizeof(this->nodes));
     no_set_pos = false;
     verbose = true;
 }
@@ -747,4 +748,58 @@ int Mariadb_nodes::copy_to_node(char* src, char* dest, int i)
     printf("%s\n", sys);
 
     return system(sys);
+}
+
+static void wait_until_pos(MYSQL *mysql, int filenum, int pos)
+{
+    int slave_filenum = 0;
+    int slave_pos = 0;
+
+    do
+    {
+        mysql_query(mysql, "SHOW SLAVE STATUS");
+        MYSQL_RES *res = mysql_store_result(mysql);
+
+        if (res)
+        {
+            MYSQL_ROW row = mysql_fetch_row(res);
+
+            if (row && row[5] && row[6])
+            {
+                char *file_suffix = strchr(row[5], '.') + 1;
+                slave_filenum = atoi(file_suffix);
+                slave_pos = atoi(row[6]);
+            }
+            mysql_free_result(res);
+        }
+    }
+    while(slave_filenum < filenum || slave_pos < pos);
+}
+
+void Mariadb_nodes::sync_slaves()
+{
+    if (this->nodes[0] == NULL)
+    {
+        this->connect();
+    }
+
+    mysql_query(this->nodes[0], "SHOW MASTER STATUS");
+    MYSQL_RES *res = mysql_store_result(this->nodes[0]);
+
+    if (res)
+    {
+        MYSQL_ROW row = mysql_fetch_row(res);
+        if (row && row[0] && row[1])
+        {
+            const char* file_suffix = strchr(row[0], '.') + 1;
+            int filenum = atoi(file_suffix);
+            int pos = atoi(row[1]);
+
+            for (int i = 1; i < this->N; i++)
+            {
+                wait_until_pos(this->nodes[i], filenum, pos);
+            }
+        }
+        mysql_free_result(res);
+    }
 }
